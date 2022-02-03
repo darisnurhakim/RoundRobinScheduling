@@ -25,7 +25,7 @@ int main(){
     //proses masuk antrian
     int proses1 = 0, proses2 = 0, n = 1;
     int urutan = 0;
-    int proses3 = 0, proses4 = 0, flag = 0, o = 0, q = 2;
+    int proses3 = 0, proses4 = 0, temp, flag = 0, o = 0, q = 2;
     int urutanproses[jmlProses];
     int* waktuproses = (int*)calloc(jmlProses-1, sizeof(int));
 
@@ -41,10 +41,11 @@ int main(){
             }
             printf("\n");
             waktuproses[proses3] = waktu - (o * kuantum);
-            if ((waktuproses[proses3] >= eksekusi[proses3]) || (eksekusi[proses3] <= kuantum)){
+            if ((eksekusi[proses3] <= kuantum)){
+                waktuproses[proses4] += waktuproses[proses3] - temp; 
+                temp = waktuproses[proses3];
                 waktuproses[proses3] = 0;
-                waktuproses[proses4] += waktu - (o * kuantum); 
-                if (waktuproses[proses4] >= q * kuantum){
+                if (waktuproses[proses4] > q * kuantum){
                     waktuproses[proses3] = waktuproses[proses4] - q * kuantum;
                     waktuproses[proses4] = q * kuantum;
                     q++;
@@ -56,7 +57,7 @@ int main(){
                 o++;
                 waktuproses[proses3 + 1] = waktu - (o * kuantum);
                 proses3++;
-                }
+            }
             for (int p = 0; p < jmlProses; p++){
                 printf("P[%d]: %d ms\t", p, waktuproses[p]);
             }
@@ -76,6 +77,28 @@ int main(){
             for (int l = 0; l < proses1; l++){
                 printf("P[%d]\t",urutanproses[l]);
             }
+            printf("\n");
+            waktuproses[proses3] = waktu - (o * kuantum);
+            if ((eksekusi[proses3] <= kuantum)){
+                waktuproses[proses4] += waktuproses[proses3] - temp;
+                temp = waktuproses[proses3];
+                waktuproses[proses3] = 0;
+                if (waktuproses[proses4] > q * kuantum){
+                    waktuproses[proses3] = waktuproses[proses4] - q * kuantum;
+                    waktuproses[proses4] = q * kuantum;
+                    q++;
+                    proses4++;  
+                }
+            }
+            else if (waktuproses[proses3] >= kuantum){
+                waktuproses[proses3] = kuantum;
+                o++;
+                waktuproses[proses3 + 1] = waktu - (o * kuantum);
+                proses3++;
+            }
+            for (int p = 0; p < jmlProses; p++){
+                printf("P[%d]: %d ms\t", p, waktuproses[p]);
+            }
             n++;
             proses2++;
         }
@@ -83,5 +106,4 @@ int main(){
 
     // proses penyelesaian
     printf("\n\n--Semua proses sudah masuk antrian--");
-
 }
